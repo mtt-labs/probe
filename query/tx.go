@@ -22,7 +22,10 @@ func TxsAtHeightRPC(q *Query, height int64, codec client.Codec) (*txTypes.GetTxs
 	}
 	orderBy := txTypes.OrderBy_ORDER_BY_UNSPECIFIED
 
-	req := &txTypes.GetTxsEventRequest{Events: []string{"tx.height=" + fmt.Sprintf("%d", height)}, Pagination: q.Options.Pagination, OrderBy: orderBy}
+	page := q.Options.Pagination.Offset / q.Options.Pagination.Limit
+	page = page + 1
+
+	req := &txTypes.GetTxsEventRequest{Events: []string{"tx.height=" + fmt.Sprintf("%d", height)}, Pagination: q.Options.Pagination, Page: page, Limit: q.Options.Pagination.Limit, OrderBy: orderBy}
 	return TxsRPC(q, req, codec)
 }
 
